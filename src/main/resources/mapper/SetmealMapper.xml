@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cc.mapper.SetmealMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cc.pojo.Setmeal">
+        <id column="id" property="id" />
+        <result column="category_id" property="categoryId" />
+        <result column="name" property="name" />
+        <result column="price" property="price" />
+        <result column="status" property="status" />
+        <result column="code" property="code" />
+        <result column="description" property="description" />
+        <result column="image" property="image" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="create_user" property="createUser" />
+        <result column="update_user" property="updateUser" />
+        <result column="is_deleted" property="isDeleted" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, category_id, name, price, status, code, description, image, create_time, update_time, create_user, update_user, is_deleted
+    </sql>
+
+    <!--套餐分页+模糊查询-->
+    <select id="listSetmeal" resultType="com.cc.dto.SetmealDto">
+        select s.*,c.name as categoryName
+        From setmeal s,category c
+        Where s.category_id=c.id
+        <if test="name!=null">
+        and
+            c.name like '%' #{name} '%'
+        </if>
+        limit #{page} , #{pageSize}
+    </select>
+    <select id="getSetmealData" resultType="com.cc.dto.SetmealDto">
+        select s.*, c.name as categoryName
+        From setmeal s,
+             category c
+        where s.category_id=c.id and s.id = #{id};
+    </select>
+
+
+</mapper>

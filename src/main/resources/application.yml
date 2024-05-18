@@ -1,0 +1,68 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: ccTakeOut
+  #datasource:
+  #  druid:
+  #    driver-class-name: com.mysql.cj.jdbc.Driver
+  #    url: jdbc:mysql://localhost:3306/ruiji?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+  #    username: root
+  #    password: 333
+  shardingsphere:
+    datasource:
+      names:
+        master,slave
+      # 主库（增删改操作）
+      master:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://121.89.200.204:3306/ruiji?characterEncoding=utf-8
+        username: root
+        password: 333
+      # 从数据源（读操作）
+      slave:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://121.36.51.170:3306/ruiji?characterEncoding=utf-8
+        username: root
+        password: 333
+    masterslave:
+      # 读写分离配置
+      load-balance-algorithm-type: round_robin #轮询（如果有多个从库会轮询着读）
+      # 最终的数据源名称
+      name: dataSource
+      # 主库数据源名称
+      master-data-source-name: master
+      # 从库数据源名称列表，多个逗号分隔
+      slave-data-source-names: slave
+    props:
+      sql:
+        show: true #开启SQL显示，默认false
+  main:
+    allow-bean-definition-overriding: true
+
+
+
+  redis:
+    host: localhost # 本地IP 或是 虚拟机IP
+    port: 6379
+    #    password: root
+    database: 0  # 默认使用 0号db
+  cache:
+    redis:
+      time-to-live: 1800000  # 设置缓存数据的过期时间，30分钟
+
+mybatis-plus:
+  configuration:
+    #在映射实体或者属性时，将数据库中表名和字段名中的下划线去掉，开启按照驼峰命名法映射
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
+
+#自定义的文件上传存储位置
+takeOutFile:
+  fileLocaltion: D:\JavaProject\takeOutUploadFile\
